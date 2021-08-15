@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const credConfig = require("./config");
+const util = require('util');
 
 const dbConn = mysql.createConnection({
   host: credConfig.dbHost,
@@ -9,20 +10,15 @@ const dbConn = mysql.createConnection({
   database: "products",
 });
 
-dbConn.connect((err) => {
-  if (err) throw err;
-  console.log("MySql connected...");
-});
+const query = util.promisify(dbConn.query).bind(dbConn);
 
-const dbAction = (sql, callback) => {
-  dbConn.query(sql, function (err, results) {
-    if (err) {
-      throw err;
-    }
-    return callback(results);
-  });
-};
+const dbAction = async (sql) => {
+  try {
+    const rows = await query(sql);
+    return rows
+  } finally {
+    dbConn.end();
+  }
+}
 
-const dbEnd = () => dbConn.end();
-
-module.exports = { dbAction, dbEnd };
+module.exports = { dbAction };
