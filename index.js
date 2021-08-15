@@ -8,6 +8,6 @@ exports.handler = async (event) => {
   return dbAction(sql)
         .then((res) => ({
           statusCode: 200,
-          body: res
+          body: JSON.stringify(res)
         }));
 };
