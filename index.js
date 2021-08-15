@@ -2,7 +2,7 @@ const { dbAction, dbEnd } = require("./db");
 
 exports.handler = async (event) => {
   console.log("event:", event);
-
+  console.log("event Body:", event.body);
   const sql = "SELECT * FROM products"
 
   let output = "";
